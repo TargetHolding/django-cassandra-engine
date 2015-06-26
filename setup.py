@@ -23,9 +23,8 @@ setup(
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     install_requires=[
-        'Django>=1.5',
-        'djangotoolbox==1.6.2',
-        'cqlengine==0.21.0'
+        'Django<1.9',
+        'cassandra-driver==2.5.1'
     ],
     packages=find_packages(
         exclude=['tests', 'tests.*', 'testproject', 'testproject.*']),
@@ -42,6 +41,8 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
         'Topic :: Database',
         'Topic :: Internet',
         'Topic :: Software Development :: Libraries :: Python Modules',

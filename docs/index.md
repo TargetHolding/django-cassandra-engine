@@ -1,28 +1,37 @@
 # django-cassandra-engine docs
 
+**IMPORTANT: Users of versions <0.3.0, please read this before upgrading!**
+
+**django-cassandra-engine>=0.3.0 uses python-driver with built-in cqlengine
+instead of cqlengine itself. 
+You should read 
+[Upgrade Guide](http://datastax.github.io/python-driver/cqlengine/upgrade_guide.html)
+before installing the new version!**
+
 ## Overview
 
 *django-cassandra-engine* is a database wrapper for *Django Framework*.
-It uses latest *Cqlengine*, which is currently the best Cassandra CQL 3 Object Mapper for Python.
+It uses latest *Cqlengine*, which is currently the best Cassandra CQL 3 Object
+Mapper for Python.
 
 ---
 
 ## Features
 
-* working `syncdb`, `migrate`, `sync_cassandra`, `inspectdb` and `flush` commands
+* working `flush`, `syncdb`, `migrate`, `sync_cassandra`, `inspectdb` and 
+  `dbshell` commands
 * support for creating/destroying test database
 * accepts all `Cqlengine` and `cassandra.cluster.Cluster` connection options
 * automatic connection/disconnection handling
-* support for multiple databases (also relational)
+* works well along with relational databases
 
 ---
 
 ## Requirements
 
-* Cassandra (of course)
-* cqlengine
-* django-nonrel
-* djangotoolbox
+* Python>=2.7
+* Cassandra>=2.0 (of course)
+* cassandra-driver>=2.5
 * Django>=1.5
 * blist (optional)
 
@@ -78,8 +87,8 @@ This rule applies only to Django >= 1.7.
 
         #  myapp/models.py
         import uuid
-        from cqlengine import columns
-        from cqlengine.models import Model
+        from cassandra.cqlengine import columns
+        from cassandra.cqlengine.models import Model
 
         class ExampleModel(Model):
             read_repair_chance = 0.05 # optional - defaults to 0.1
@@ -120,7 +129,6 @@ This is also possible! Just define your `DATABASES` like here:
                 },
                 'connection': {
                     'consistency': ConsistencyLevel.ONE,
-                    'lazy_connect': True,
                     'retry_connect': True
                     # + All connection options for cassandra.cluster.Cluster()
                 },
@@ -169,7 +177,6 @@ to `connection` dict:
     ...
     'connection': {
         'consistency': ConsistencyLevel.ONE,
-        'lazy_connect': True,
         'retry_connect': True,
         'port': 9042,
         'auth_provider': PlainTextAuthProvider(username='user', password='password')
@@ -202,6 +209,20 @@ routing around the model layer entirely:
 
 ---
 
+## Quick access to dbshell via cqlsh
+
+If you need to perform raw CQL query on your keyspace just run:
+
+    $ python manage.py dbshell                                                                                                                                                                master 
+    Connected to Test Cluster at 127.0.0.1:9042.
+    [cqlsh 5.0.1 | Cassandra 2.1.4 | CQL spec 3.2.0 | Native protocol v3]
+    Use HELP for help.
+    cqlsh:your_keyspace>
+
+It will connect directly to your database using credentials from settings.py
+
+---
+
 ## Working with source code and running tests
 
     git clone https://github.com/r4fek/django-cassandra-engine.git
@@ -211,6 +232,7 @@ routing around the model layer entirely:
     python setup.py install
     python setup.py test
 
+---
 
 ## Contributing
 

@@ -1,8 +1,30 @@
 # CHANGELOG
 
-## Version 0.2.3 (TBA)
+## Version 0.3.3 (25.05.2015)
+
+* RemovedInDjango19Warnings when using Django >= 1.7 (by @paksu)
+* set session.default_consistency_level
+
+## Version 0.3.2 (04.05.2015)
+
+* upgrade cassandra-driver to 2.5.1
+
+## Version 0.3.1 (10.04.2015)
+
+* fix #30: Add support for Django>=1.8
+* remove djangotoolbox dependency
+* fix #21: Python 3 compatibility
+
+## Version 0.3.0 (03.04.2015)
+
+* fix #29: Update to use integrated cqlengine via cassandra-driver>=2.5.0
+  (by @mbeacom and @r4fek)
+
+## Version 0.2.3 (25.03.2015)
 
 * fix #15: test database not used by code under test (by @lsmithso)
+* fix #25: working fixtures in `django_cassandra_engine.test.TestCase` 
+  (by @slurms)
 
 ## Version 0.2.2 (19.01.2015)
 

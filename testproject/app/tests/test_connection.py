@@ -1,3 +1,4 @@
+from cassandra import ConsistencyLevel
 from cassandra.auth import PlainTextAuthProvider
 from cassandra.cluster import Cluster
 from mock import patch
@@ -22,20 +23,20 @@ class CassandraConnectionTestCase(TestCase):
 
     def test_connected_to_db(self):
 
-        from cqlengine import connection as cql_connection
+        from cassandra.cqlengine import connection as cql_connection
 
         self.assertIsInstance(cql_connection.cluster, Cluster)
         self.assertIsNotNone(cql_connection.session)
 
     def test_session_property(self):
 
-        from cqlengine import connection as cql_connection
+        from cassandra.cqlengine import connection as cql_connection
 
         self.assertEqual(self.connection.session, cql_connection.session)
 
     def test_cluster_property(self):
 
-        from cqlengine import connection as cql_connection
+        from cassandra.cqlengine import connection as cql_connection
 
         self.assertEqual(self.connection.cluster, cql_connection.cluster)
 
@@ -45,7 +46,7 @@ class CassandraConnectionTestCase(TestCase):
         self.assertEqual(
             self.connection.connection_options, connection_options)
 
-    @patch("cqlengine.connection")
+    @patch("cassandra.cqlengine.connection")
     def test_connection_setup_called_first_time_with_proper_options(
             self, connection_mock):
 
@@ -96,6 +97,16 @@ class CassandraConnectionTestCase(TestCase):
         self.assertEqual(self.connection.session_options, session_opts)
         self.assertEqual(self.connection.session.default_timeout,
                          session_opts.get('default_timeout'))
+
+    def test_connection_session_default_consistency(self):
+
+        settings = self.cassandra_connection.settings_dict
+        settings['OPTIONS']['connection'] = {
+            'consistency': ConsistencyLevel.ALL
+        }
+        connection = CassandraConnection(**settings)
+        self.assertEqual(connection.session.default_consistency_level,
+                         ConsistencyLevel.ALL)
 
     def test_raw_cql_cursor_queries(self):
         cursor = self.connection.cursor()

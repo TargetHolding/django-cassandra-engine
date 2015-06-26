@@ -4,10 +4,12 @@ env:
   - DJANGO_VERSION=1.5 CASSANDRA_VERSION=20
   - DJANGO_VERSION=1.6 CASSANDRA_VERSION=20
   - DJANGO_VERSION=1.7 CASSANDRA_VERSION=20
+  - DJANGO_VERSION=1.8 CASSANDRA_VERSION=20
 
 python:
   - "2.7"
   - "3.3"
+  - "3.4"
 
 before_install:
   - sudo apt-get install libev4 libev-dev

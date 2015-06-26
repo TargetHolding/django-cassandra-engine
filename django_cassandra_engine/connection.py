@@ -1,4 +1,4 @@
-from cqlengine import connection
+from cassandra.cqlengine import connection
 from cassandra.auth import PlainTextAuthProvider
 from django.utils import six
 
@@ -15,6 +15,21 @@ class Cursor(object):
 
     def fetchmany(self, _):
         return []
+
+
+class FakeConnection(object):
+
+    def commit(self):
+        pass
+
+    def rollback(self):
+        pass
+
+    def cursor(self):
+        return Cursor(None)
+
+    def close(self):
+        pass
 
 
 class CassandraConnection(object):
@@ -38,13 +53,16 @@ class CassandraConnection(object):
         self.setup()
 
     def setup(self):
-        from cqlengine import connection
+        from cassandra.cqlengine import connection
         if connection.cluster is not None:
             # already connected
             return
         connection.setup(self.hosts, self.keyspace, **self.connection_options)
 
-        for option, value in six.iteritems(self.session_options):
+        consistency = self.connection_options.get('consistency')
+        if consistency:
+            self.session.default_consistency_level = consistency
+        for option, value in self.session_options.items():
             setattr(self.session, option, value)
 
     def commit(self):
